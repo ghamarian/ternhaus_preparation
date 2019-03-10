@@ -6,9 +6,9 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
-from model import Net
+from super_resolution.model import Net
 # from data import get_training_set, get_test_set
-from data_new import DatasetFactory
+from super_resolution.data_new import DatasetFactory
 
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch Super Res Example')
