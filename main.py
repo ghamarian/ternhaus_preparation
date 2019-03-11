@@ -49,10 +49,10 @@ optimizer = optim.Adam(model.parameters(), lr=opt.lr)
 def train(epoch):
     epoch_loss = 0
     for iteration, batch in enumerate(training_data_loader, 1):
-        input, target = batch[0].to(device), batch[1].to(device)
+        input, target1, target2 = batch[0].to(device), batch[1].to(device), batch[2].to(device)
 
         optimizer.zero_grad()
-        loss = criterion(model(input), target)
+        loss = criterion(model(input), target1)
         epoch_loss += loss.item()
         loss.backward()
         optimizer.step()
