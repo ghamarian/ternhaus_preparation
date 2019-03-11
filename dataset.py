@@ -26,18 +26,26 @@ class DatasetFromFolder(data.Dataset):
         self.target_transform = target_transform
 
     def __getitem__(self, index):
-        filename = self.image_filenames[index]
-        basename, ext = splitext(filename)
-        input = load_img(filename)
-        mask1 = load_img(f'{basename}-mask1{ext}')
-        mask2 = load_img(f'{basename}-mask2{ext}')
+        input, target1, target2 = self.load_files(index)
 
         if self.input_transform:
             input = self.input_transform(input)
+        if self.target_transform:
+            target1 = self.target_transform(target1)
+        if self.target_transform:
+            target2 = self.target_transform(target2)
 
-        target1 = self.target_transform(mask1)
-        target2 = self.target_transform(mask2)
+        return input, target1, target2
 
+    def load_files(self, index):
+        input_filename = self.image_filenames[index]
+        basename, ext = splitext(input_filename)
+        target1_name = f'{basename}-mask1{ext}'
+        target2_name = f'{basename}-mask2{ext}'
+
+        input = load_img(input_filename)
+        target1 = load_img(target1_name)
+        target2 = load_img(target2_name)
         return input, target1, target2
 
     def __len__(self):

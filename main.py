@@ -81,6 +81,7 @@ def checkpoint(epoch):
     torch.save(model, model_out_path)
     print(f"Checkpoint saved to {model_out_path}")
 
+
 for epoch in range(1, opt.nEpochs + 1):
     train(epoch)
     runtest()
