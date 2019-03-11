@@ -49,7 +49,8 @@ optimizer = optim.Adam(model.parameters(), lr=opt.lr)
 def train(epoch):
     epoch_loss = 0
     for iteration, batch in enumerate(training_data_loader, 1):
-        input, target1, target2 = batch[0].to(device), batch[1].to(device), batch[2].to(device)
+        batch = [b.to(device) for b in batch]
+        input, target1, target2 = batch
 
         optimizer.zero_grad()
         loss = criterion(model(input), target1)
@@ -57,9 +58,9 @@ def train(epoch):
         loss.backward()
         optimizer.step()
 
-        print("===> Epoch[{}]({}/{}): Loss: {:.4f}".format(epoch, iteration, len(training_data_loader), loss.item()))
+        print(f"===> Epoch[{epoch}]({iteration}/{len(training_data_loader)}): Loss: {loss.item():.4f}")
 
-    print("===> Epoch {} Complete: Avg. Loss: {:.4f}".format(epoch, epoch_loss / len(training_data_loader)))
+    print(f"===> Epoch {epoch} Complete: Avg. Loss: {epoch_loss / len(training_data_loader):.4f}")
 
 
 def runtest():
@@ -72,13 +73,13 @@ def runtest():
             mse = criterion(prediction, target)
             psnr = 10 * log10(1 / mse.item())
             avg_psnr += psnr
-    print("===> Avg. PSNR: {:.4f} dB".format(avg_psnr / len(testing_data_loader)))
+    print(f"===> Avg. PSNR: {avg_psnr / len(testing_data_loader):.4f} dB")
 
 
 def checkpoint(epoch):
-    model_out_path = "model_epoch_{}.pth".format(epoch)
+    model_out_path = f"model_epoch_{epoch}.pth"
     torch.save(model, model_out_path)
-    print("Checkpoint saved to {}".format(model_out_path))
+    print(f"Checkpoint saved to {model_out_path}")
 
 for epoch in range(1, opt.nEpochs + 1):
     train(epoch)

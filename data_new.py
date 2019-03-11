@@ -46,7 +46,6 @@ class DatasetFactory:
         return Compose([
             CenterCrop(crop_size),
             Resize(crop_size // self.upscale_factor),
-
             ToTensor(),
         ])
 
@@ -59,6 +58,15 @@ class DatasetFactory:
     def get_training_set(self):
         root_dir = download_bsd300()
         train_dir = join(root_dir, "train")
+        crop_size = self.calculate_valid_crop_size()
+
+        return self.datasetFactory(train_dir,
+                                   input_transform=self.input_transform(crop_size),
+                                   target_transform=self.target_transform(crop_size))
+
+    def get_validation_set(self):
+        root_dir = download_bsd300()
+        train_dir = join(root_dir, "valid")
         crop_size = self.calculate_valid_crop_size()
 
         return self.datasetFactory(train_dir,
